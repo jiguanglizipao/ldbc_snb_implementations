@@ -10,4 +10,7 @@ validation_params.csv
 *.swp
 *-actual.json
 *-expected.json
-results-*/
+results*/
+.settings/
+.project
+.classpath

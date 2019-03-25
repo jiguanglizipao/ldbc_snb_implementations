@@ -25,6 +25,7 @@ public abstract class PostgresUpdateOperationHandler<TOperation extends Operatio
             throw new DbException(e);
         }
         resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+        state.returnConnection(conn);
     }
 
 }

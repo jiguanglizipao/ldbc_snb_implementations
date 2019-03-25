@@ -30,6 +30,7 @@ public abstract class PostgresMultipleUpdateOperationHandler<TOperation extends 
             throw new DbException(e);
         }
         resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+        state.returnConnection(conn);
     }
 
 }

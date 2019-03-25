@@ -36,6 +36,7 @@ public abstract class PostgresSingletonOperationHandler<TOperation extends Opera
             throw new DbException(e);
         }
         resultReporter.report(resultCount, tuple, operation);
+        state.returnConnection(conn);
     }
 
     public abstract TOperationResult convertSingleResult(ResultSet result) throws SQLException;

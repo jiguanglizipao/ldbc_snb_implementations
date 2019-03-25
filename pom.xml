@@ -17,9 +17,11 @@
 
     <modules>
         <module>common</module>
-        <module>cypher</module>
         <module>postgres</module>
+<!-- 
+        <module>cypher</module>
         <module>sparql</module>
+-->
     </modules>
 
     <build>

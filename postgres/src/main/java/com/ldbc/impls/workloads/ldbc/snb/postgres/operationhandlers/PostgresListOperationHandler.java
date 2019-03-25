@@ -42,6 +42,7 @@ public abstract class PostgresListOperationHandler<TOperation extends Operation<
             throw new DbException(e);
         }
         resultReporter.report(resultCount, results, operation);
+        state.returnConnection(conn);
     }
 
     public abstract TOperationResult convertSingleResult(ResultSet result) throws SQLException;
