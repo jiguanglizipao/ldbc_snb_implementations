@@ -14,3 +14,4 @@ results*/
 .settings/
 .project
 .classpath
+thrift-gen
