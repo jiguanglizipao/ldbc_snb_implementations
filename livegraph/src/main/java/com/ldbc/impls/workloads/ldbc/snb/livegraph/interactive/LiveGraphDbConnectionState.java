@@ -13,7 +13,7 @@ public class LiveGraphDbConnectionState extends DbConnectionState {
     static final int INITIAL_CAPACITY = 24;
     protected String hostname;
     protected int port;
-    LinkedList<TTransport> pool = new LinkedList<TTransport>();
+    LinkedList<TTransport> pool = new LinkedList<>();
 
     public LiveGraphDbConnectionState(Map<String, String> properties) throws TException {
 

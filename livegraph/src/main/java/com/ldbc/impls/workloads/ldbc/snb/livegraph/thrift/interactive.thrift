@@ -42,7 +42,42 @@ struct Query1Response {
     17: list<string> friendCompanies_city,
 }
 
+struct Query2Request {
+    1: i64 personId,
+    2: i64 maxDate,
+    3: i32 limit,
+}
+
+struct Query2Response {
+    1: i64 personId,
+    2: string personFirstName,
+    3: string personLastName,
+    4: i64 messageId,
+    6: string messageContent,
+    7: i64 messageCreationDate,
+}
+
+struct Query3Request {
+    1: i64 personId,
+    2: string countryXName,
+    3: string countryYName,
+    4: i64 startDate,
+    5: i32 durationDays,
+    6: i32 limit,
+}
+
+struct Query3Response {
+    1: i64 personId,
+    2: string personFirstName,
+    3: string personLastName,
+    4: i32 xCount,
+    6: i32 yCount,
+    7: i32 count,
+}
+
 service Interactive {
     list<Query1Response> query1(1:Query1Request request),
+    list<Query2Response> query2(1:Query2Request request),
+    list<Query3Response> query3(1:Query3Request request),
     ShortQuery1Response shortQuery1(1:ShortQuery1Request request),
 }
