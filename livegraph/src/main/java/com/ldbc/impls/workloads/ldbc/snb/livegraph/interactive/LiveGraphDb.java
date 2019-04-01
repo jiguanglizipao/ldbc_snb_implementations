@@ -136,7 +136,57 @@ public class LiveGraphDb extends Db {
         public void executeOperation( LdbcQuery1 operation, LiveGraphDbConnectionState dbConnectionState,
                 ResultReporter resultReporter ) throws DbException
         {
-            resultReporter.report( 0, LDBC_QUERY_1_RESULTS, operation );
+            Query1Request request = new Query1Request();
+            request.personId = operation.personId();
+            request.firstName = operation.firstName();
+            request.limit = operation.limit();
+            List<Query1Response> response = new ArrayList<Query1Response>();
+            ArrayList<LdbcQuery1Result> result = new ArrayList<LdbcQuery1Result>();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.query1(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            for(Query1Response resp : response)
+            {
+                ArrayList<List<Object>> friendUniversities = new ArrayList<List<Object>>();
+                ArrayList<List<Object>> friendCompanies = new ArrayList<List<Object>>();
+                for(int i=0;i<resp.friendUniversities_name.size();i++)
+                {
+                    ArrayList<Object> list = new ArrayList<Object>();
+                    list.add(resp.friendUniversities_name.get(i));
+                    list.add(resp.friendUniversities_year.get(i));
+                    list.add(resp.friendUniversities_city.get(i));
+                    friendUniversities.add(list);
+                }
+                for(int i=0;i<resp.friendCompanies_name.size();i++)
+                {
+                    ArrayList<Object> list = new ArrayList<Object>();
+                    list.add(resp.friendCompanies_name.get(i));
+                    list.add(resp.friendCompanies_year.get(i));
+                    list.add(resp.friendCompanies_city.get(i));
+                    friendCompanies.add(list);
+                }
+                LdbcQuery1Result res = new LdbcQuery1Result(resp.friendId, 
+                        resp.friendLastName,
+                        resp.distanceFromPerson,
+                        resp.friendBirthday,
+                        resp.friendCreationDate,
+                        resp.friendGender,
+                        resp.friendBrowserUsed,
+                        resp.friendLocationIp,
+                        resp.friendEmails,
+                        resp.friendLanguages,
+                        resp.friendCityName,
+                        friendUniversities,
+                        friendCompanies);
+                result.add(res);
+            }
+            resultReporter.report( 0, result , operation );
         }
     }
 
@@ -313,9 +363,12 @@ public class LiveGraphDb extends Db {
     SHORT READS
      */
 
-    public static class LdbcShortQuery1PersonProfileHandler implements OperationHandler<LdbcShortQuery1PersonProfile, LiveGraphDbConnectionState> {
+    public static class LdbcShortQuery1PersonProfileHandler implements OperationHandler<LdbcShortQuery1PersonProfile, LiveGraphDbConnectionState> 
+    {
         @Override
-        public void executeOperation( LdbcShortQuery1PersonProfile operation, LiveGraphDbConnectionState dbConnectionState, ResultReporter resultReporter ) throws DbException {
+        public void executeOperation( LdbcShortQuery1PersonProfile operation, LiveGraphDbConnectionState dbConnectionState, 
+                ResultReporter resultReporter ) throws DbException 
+        {
             ShortQuery1Request request = new ShortQuery1Request();
             request.personId = operation.personId();
             ShortQuery1Response response = null;
@@ -336,7 +389,7 @@ public class LiveGraphDb extends Db {
                     response.cityId, 
                     response.gender, 
                     response.creationDate);
-            resultReporter.report( response.ret, result , operation );
+            resultReporter.report( 0, result , operation );
         }
 
 
