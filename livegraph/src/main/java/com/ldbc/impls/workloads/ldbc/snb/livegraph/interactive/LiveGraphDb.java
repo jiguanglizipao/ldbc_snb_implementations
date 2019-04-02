@@ -14,10 +14,6 @@ import java.util.Map;
 
 public class LiveGraphDb extends Db {
 
-    private static final List<LdbcQuery4Result> LDBC_QUERY_4_RESULTS =
-            DummyLdbcSnbInteractiveOperationResultSets.read4Results();
-    private static final List<LdbcQuery5Result> LDBC_QUERY_5_RESULTS =
-            DummyLdbcSnbInteractiveOperationResultSets.read5Results();
     private static final List<LdbcQuery6Result> LDBC_QUERY_6_RESULTS =
             DummyLdbcSnbInteractiveOperationResultSets.read6Results();
     private static final List<LdbcQuery7Result> LDBC_QUERY_7_RESULTS =
@@ -228,7 +224,27 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcQuery4 operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
-            resultReporter.report(0, LDBC_QUERY_4_RESULTS, operation);
+            Query4Request request = new Query4Request();
+            request.personId = operation.personId();
+            request.startDate = operation.startDate().getTime();
+            request.durationDays = operation.durationDays();
+            request.limit = operation.limit();
+            List<Query4Response> response = new ArrayList<>();
+            ArrayList<LdbcQuery4Result> result = new ArrayList<>();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.query4(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            for (Query4Response resp : response) {
+                LdbcQuery4Result res = new LdbcQuery4Result(resp.tagName, resp.postCount);
+                result.add(res);
+            }
+            resultReporter.report(0, result, operation);
         }
     }
 
@@ -236,15 +252,53 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcQuery5 operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
-            resultReporter.report(0, LDBC_QUERY_5_RESULTS, operation);
+            Query5Request request = new Query5Request();
+            request.personId = operation.personId();
+            request.minDate = operation.minDate().getTime();
+            request.limit = operation.limit();
+            List<Query5Response> response = new ArrayList<>();
+            ArrayList<LdbcQuery5Result> result = new ArrayList<>();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.query5(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            for (Query5Response resp : response) {
+                LdbcQuery5Result res = new LdbcQuery5Result(resp.forumTitle, resp.postCount);
+                result.add(res);
+            }
+            resultReporter.report(0, result, operation);
         }
     }
 
     public static class LdbcQuery6Handler implements OperationHandler<LdbcQuery6, LiveGraphDbConnectionState> {
         @Override
-        public void executeOperation(LdbcQuery6 operation, LiveGraphDbConnectionState dummyDbConnectionState,
+        public void executeOperation(LdbcQuery6 operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
-            resultReporter.report(0, LDBC_QUERY_6_RESULTS, operation);
+            Query6Request request = new Query6Request();
+            request.personId = operation.personId();
+            request.tagName = operation.tagName();
+            request.limit = operation.limit();
+            List<Query6Response> response = new ArrayList<>();
+            ArrayList<LdbcQuery6Result> result = new ArrayList<>();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.query6(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            for (Query6Response resp : response) {
+                LdbcQuery6Result res = new LdbcQuery6Result(resp.tagName, resp.postCount);
+                result.add(res);
+            }
+            resultReporter.report(0, result, operation);
         }
     }
 
