@@ -95,6 +95,114 @@ struct Query6Response {
     2: i32 postCount,
 }
 
+struct Query7Request {
+    1: i64 personId,
+    2: i32 limit,
+}
+
+struct Query7Response {
+    1: i64 personId,
+    2: string personFirstName,
+    3: string personLastName,
+    4: i64 likeCreationDate,
+    5: i64 commentOrPostId,
+    6: string commentOrPostContent,
+    7: i32 minutesLatency,
+    8: bool isNew,
+}
+
+struct Query8Request {
+    1: i64 personId,
+    2: i32 limit,
+}
+
+struct Query8Response {
+    1: i64 personId,
+    2: string personFirstName,
+    3: string personLastName,
+    4: i64 commentCreationDate,
+    5: i64 commentId,
+    6: string commentContent,
+}
+
+struct Query9Request {
+    1: i64 personId,
+    2: i64 maxDate,
+    3: i32 limit,
+}
+
+struct Query9Response {
+    1: i64 personId,
+    2: string personFirstName,
+    3: string personLastName,
+    4: i64 messageId,
+    5: string messageContent,
+    6: i64 messageCreationDate,
+}
+
+struct Query10Request {
+    1: i64 personId,
+    2: i32 month,
+    3: i32 limit,
+}
+
+struct Query10Response {
+    1: i64 personId,
+    2: string personFirstName,
+    3: string personLastName,
+    4: i32 commonInterestSore
+    5: string personGender,
+    6: string personCityName,
+}
+
+struct Query11Request {
+    1: i64 personId,
+    2: string countryName,
+    3: i32 workFromYear,
+    4: i32 limit,
+}
+
+struct Query11Response {
+    1: i64 personId,
+    2: string personFirstName,
+    3: string personLastName,
+    4: string organizationName,
+    5: i32 organizationWorkFromYear,
+}
+
+struct Query12Request {
+    1: i64 personId,
+    2: string tagClassName,
+    3: i32 limit,
+}
+
+struct Query12Response {
+    1: i64 personId,
+    2: string personFirstName,
+    3: string personLastName,
+    4: list<string> tagNames,
+    5: i32 replyCount,
+}
+
+struct Query13Request {
+    1: i64 person1Id,
+    2: i64 person2Id,
+}
+
+struct Query13Response {
+    1: i32 shortestPathLength,
+}
+
+struct Query14Request {
+    1: i64 person1Id,
+    2: i64 person2Id,
+}
+
+struct Query14Response {
+    1: list<i64> personIdsInPath,
+    2: double pathWeight,
+}
+
 struct ShortQuery1Request {
     1: i64 personId,
 }
@@ -117,5 +225,13 @@ service Interactive {
     list<Query4Response> query4(1:Query4Request request),
     list<Query5Response> query5(1:Query5Request request),
     list<Query6Response> query6(1:Query6Request request),
+    list<Query7Response> query7(1:Query7Request request),
+    list<Query8Response> query8(1:Query8Request request),
+    list<Query9Response> query9(1:Query9Request request),
+    list<Query10Response> query10(1:Query10Request request),
+    list<Query11Response> query11(1:Query11Request request),
+    list<Query12Response> query12(1:Query12Request request),
+    Query13Response query13(1:Query13Request request),
+    list<Query14Response> query14(1:Query14Request request),
     ShortQuery1Response shortQuery1(1:ShortQuery1Request request),
 }
