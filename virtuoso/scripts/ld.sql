@@ -153,8 +153,8 @@ where idn (p_personid) is not null;
 
 
 delete from load_list;
-ld_dir ('/home/jiguanglizipao/ldbc_snb_datagen/SF1_foreign_key/social_network', '%.csv.gz', 'sql:snb_load (?)');
-ld_dir ('/home/jiguanglizipao/ldbc_snb_datagen/SF1_foreign_key/social_network', '%.csv', 'sql:snb_load (?)');
+ld_dir ('/home/jiguanglizipao/ldbc_snb_datagen/SF10_foreign_key/social_network', '%.csv.gz', 'sql:snb_load (?)');
+ld_dir ('/home/jiguanglizipao/ldbc_snb_datagen/SF10_foreign_key/social_network', '%.csv', 'sql:snb_load (?)');
 delete from load_list where ll_file like '%updateStrea%';
 delete from load_list where ll_file like '%postgres%';
 
