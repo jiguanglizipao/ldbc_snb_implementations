@@ -19,14 +19,13 @@ drop table post_hastag_tag_f;
 drop table tagclass_f;
 drop table tagclass_issubclassof_tagclass_f;
 drop table tag_f;
-drop table tag_hastype_tagclass_f;
 drop table k_weight;
 
 
 -- create a table for representing comments.
 create table comment_f (
     c_commentid bigint not null,
-    c_creationdate datetime not null,
+    c_creationdate varchar not null,
     c_locationip varchar not null,
     c_browserused varchar not null,
     c_content varchar not null,
@@ -45,14 +44,14 @@ create table comment_hastag_tag_f (
 create table forum_f (
    f_forumid bigint not null,
    f_title varchar not null,
-   f_creationdate datetime not null,
+   f_creationdate varchar not null,
    f_moderator bigint not null
 );
 
 create table forum_hasmember_person_f (
    fp_forumid bigint not null,
    fp_personid bigint not null,
-   fp_joindate datetime not null
+   fp_joindate varchar not null
 );
 
 create table forum_hastag_tag_f (
@@ -74,7 +73,7 @@ create table person_f (
    p_lastname varchar not null,
    p_gender varchar not null,
    p_birthday date not null,
-   p_creationdate datetime not null,
+   p_creationdate varchar not null,
    p_locationip varchar not null,
    p_browserused varchar not null,
    p_placeid bigint not null
@@ -93,19 +92,19 @@ create table person_hasinterest_tag_f (
 create table person_knows_person_f (
    pp_person1id bigint not null,
    pp_person2id bigint not null,
-  pp_creationdate datetime
+   pp_creationdate varchar not null
 );
 
 create table person_likes_post_f (
    pp_personid bigint not null,
    pp_postid bigint not null,
-   pp_creationdate datetime not null
+   pp_creationdate varchar not null
 );
 
 create table person_likes_comment_f (
    pp_personid bigint not null,
    pp_postid bigint not null,
-   pp_creationdate datetime not null
+   pp_creationdate varchar not null
 );
 
 
@@ -137,7 +136,7 @@ create table place_f (
 create table post_f (
     p_postid bigint not null,
     p_imagefile varchar,
-    p_creationdate datetime not null,
+    p_creationdate varchar not null,
     p_locationip varchar not null,
     p_browserused varchar not null,
     p_language varchar not null,
@@ -167,12 +166,7 @@ create table tagclass_issubclassof_tagclass_f (
 create table tag_f (
    t_tagid bigint not null,
    t_name varchar not null,
-   t_url varchar not null
+   t_url varchar not null,
+   t_hasType bigint not null
 );
-
-create table tag_hastype_tagclass_f (
-   tt_tagid bigint not null,
-   tt_tagclassid bigint not null
-);
-
 

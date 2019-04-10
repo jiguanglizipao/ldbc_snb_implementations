@@ -20,12 +20,12 @@ create procedure snb_load (in f varchar)
     }
   if (fname like '%likes_pos%')
     {
-      insert into likes	 select pp_personid, pp_postid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), pp_creationdate) from person_likes_post_f table option (from f) where idn (pp_personid) is not null;
+      insert into likes	 select pp_personid, pp_postid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate (pp_creationdate)) from person_likes_post_f table option (from f) where idn (pp_personid) is not null;
       return;
     }
   if (fname like '%likes_com%')
     {
-      insert into likes select pp_personid, pp_postid + 0, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), pp_creationdate) from person_likes_comment_f table option (from f) where idn (pp_personid) is not null;  
+      insert into likes select pp_personid, pp_postid + 0, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate (pp_creationdate)) from person_likes_comment_f table option (from f) where idn (pp_personid) is not null;  
       return;
     }
 
@@ -42,7 +42,7 @@ create procedure snb_load (in f varchar)
   if (fname like '%post%')
     {
       insert into post(ps_postid, ps_imagefile, ps_creationdate, ps_locationip, ps_browserused, ps_language, ps_content, ps_length, ps_creatorid, ps_locationid, ps_forumid, ps_p_creatorid)
-select p_postid, case when p_imagefile = '' then null else p_imagefile end, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), p_creationdate),
+select p_postid, case when p_imagefile = '' then null else p_imagefile end, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate (p_creationdate)),
        p_locationip, 
        p_browserused, p_language, p_content, p_length, p_creator, p_placeid, p_forumid, p_creator 
 from post_f table option (from f) where idn (p_postid) is not null;
@@ -51,7 +51,7 @@ from post_f table option (from f) where idn (p_postid) is not null;
   if (fname like '%comment%')
     {
       insert into post(ps_postid, ps_creationdate, ps_locationip, ps_browserused, ps_content, ps_length, ps_creatorid, ps_locationid, ps_replyof)
-select (c_commentid + 0), datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), c_creationdate), 
+select (c_commentid + 0), datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate (c_creationdate)), 
        c_locationip,
       c_browserused, c_content, c_length, c_creator, c_place, (case when isinteger (c_replyofcomment) then (c_replyofcomment + 0) else c_replyofpost  end)
     from comment_f table option (from f)  where idn (c_commentid) is not null; 
@@ -59,7 +59,7 @@ select (c_commentid + 0), datediff ('millisecond',  stringdate ('1970.1.1 00:00:
     }
   if (fname like '%forum_hasMem%')
     {
-      insert soft forum_person select fp_forumid, fp_personid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), fp_joindate) from forum_hasmember_person_f table option (from f) where idn (fp_forumid) is not null;
+      insert soft forum_person select fp_forumid, fp_personid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate (fp_joindate)) from forum_hasmember_person_f table option (from f) where idn (fp_forumid) is not null;
       return;
     }
   if (fname like '%forum_hasTag%')
@@ -71,7 +71,7 @@ select (c_commentid + 0), datediff ('millisecond',  stringdate ('1970.1.1 00:00:
   if (fname like '%forum%')
     {
       insert soft forum(f_forumid, f_title, f_creationdate, f_moderatorid)
-	select f_forumid, f_title, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), f_creationdate), f_moderator
+	select f_forumid, f_title, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate (f_creationdate)), f_moderator
 	from forum_f table option (from f) where idn (f_forumid) is not null;
       return;
     }
@@ -109,14 +109,14 @@ select o_organisationid, o_type, o_name, o_url, o_placeid
     }
   if (fname like '%person_knows_person%')
     {
-      insert into knows select pp_person1id, pp_person2id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), pp_creationdate) from person_knows_person_f table option (from f) where idn (pp_person1id) is not null;
-      insert into knows select pp_person2id, pp_person1id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), pp_creationdate) from person_knows_person_f table option (from f) where idn (pp_person1id) is not null;
+      insert into knows select pp_person1id, pp_person2id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate (pp_creationdate)) from person_knows_person_f table option (from f) where idn (pp_person1id) is not null;
+      insert into knows select pp_person2id, pp_person1id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate (pp_creationdate)) from person_knows_person_f table option (from f) where idn (pp_person1id) is not null;
       return;
     }
   if (fname like '%person%')
     {
       insert into person (   p_personid, p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid)
-select p_personid, p_firstname, p_lastname, p_gender, datediff ('millisecond',  stringdate ('1970.1.1'), p_birthday), datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), p_creationdate),
+select p_personid, p_firstname, p_lastname, p_gender, datediff ('millisecond',  stringdate ('1970.1.1'), p_birthday), datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate (p_creationdate)),
        p_locationip, 
        p_browserused, p_placeid
 from person_f table option (from f)    
@@ -126,18 +126,11 @@ where idn (p_personid) is not null;
 
   if (fname like '%place%')
     {
-      insert into place
-select p_placeid, p_name, p_url, p_type, p_ispartof
-from place_f table option (from f)   where idn (p_placeid) is not null;
+      insert into place select p_placeid, p_name, p_url, p_type, p_ispartof from place_f table option (from f)   where idn (p_placeid) is not null;
       return;
     }
 
 
-  if (fname like '%tag_hasTyp%')
-    {
-      insert soft tag_tagclass select * from tag_hastype_tagclass_f table option (from f) where idn (tt_tagclassid) is not null;
-      return;
-    }
   if (fname like '%ubclas%')
     {
       insert into subclass select * from tagclass_issubclassof_tagclass_f table option (from f) where idn (tt_tagclass1id) is not null;
@@ -150,7 +143,8 @@ from place_f table option (from f)   where idn (p_placeid) is not null;
     }
   if (fname like '%tag%')
     {
-      insert into tag select * from tag_f table option (from f) where idn (t_tagid) is not null;
+      insert into tag select t_tagid,t_name,t_url from tag_f table option (from f) where idn (t_tagid) is not null;
+      insert soft tag_tagclass select t_tagid,t_hasType from tag_f table option (from f) where idn (t_tagid) is not null;
       return;
     }
   log_message (sprintf ('unrecognized file %s', f));
@@ -159,43 +153,43 @@ from place_f table option (from f)   where idn (p_placeid) is not null;
 
 
 delete from load_list;
-ld_dir ('/home/jiguanglizipao/ldbc_snb_datagen/SF10_foreign_key/social_network', '%.csv.gz', 'sql:snb_load (?)');
-ld_dir ('/home/jiguanglizipao/ldbc_snb_datagen/SF10_foreign_key/social_network', '%.csv', 'sql:snb_load (?)');
+ld_dir ('/home/jiguanglizipao/ldbc_snb_datagen/SF1_foreign_key/social_network', '%.csv.gz', 'sql:snb_load (?)');
+ld_dir ('/home/jiguanglizipao/ldbc_snb_datagen/SF1_foreign_key/social_network', '%.csv', 'sql:snb_load (?)');
 delete from load_list where ll_file like '%updateStrea%';
 delete from load_list where ll_file like '%postgres%';
 
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
-rdf_loader_run () &
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
+rdf_loader_run () & 
 
 wait;
 wait_for_children;
