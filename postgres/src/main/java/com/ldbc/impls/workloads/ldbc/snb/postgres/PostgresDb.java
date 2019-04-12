@@ -382,6 +382,10 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public LdbcQuery13Result convertSingleResult(ResultSet result) throws SQLException {
+            if(result == null)
+            {
+                return new LdbcQuery13Result(-1);
+            }
             return new LdbcQuery13Result(result.getInt(1));
         }
 

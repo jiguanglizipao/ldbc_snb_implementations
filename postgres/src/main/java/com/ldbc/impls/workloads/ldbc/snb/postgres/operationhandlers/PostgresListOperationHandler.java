@@ -39,7 +39,8 @@ public abstract class PostgresListOperationHandler<TOperation extends Operation<
                 results.add(tuple);
             }
         } catch (Exception e) {
-            throw new DbException(e);
+            System.out.println(e); 
+//            throw new DbException(e);
         }
         resultReporter.report(resultCount, results, operation);
         state.returnConnection(conn);

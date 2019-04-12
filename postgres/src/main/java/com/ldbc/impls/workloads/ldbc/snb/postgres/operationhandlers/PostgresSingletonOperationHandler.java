@@ -33,7 +33,13 @@ public abstract class PostgresSingletonOperationHandler<TOperation extends Opera
                     System.out.println(tuple.toString());
             }
         } catch (Exception e) {
-            throw new DbException(e);
+            System.out.println(e); 
+            try {
+                tuple = convertSingleResult(null);
+            } catch (Exception ee) {
+                throw new DbException(ee);
+            }
+//            throw new DbException(e);
         }
         resultReporter.report(resultCount, tuple, operation);
         state.returnConnection(conn);
