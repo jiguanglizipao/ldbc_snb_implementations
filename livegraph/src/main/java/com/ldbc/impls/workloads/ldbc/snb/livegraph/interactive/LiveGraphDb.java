@@ -620,6 +620,40 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcUpdate1AddPerson operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
+            Update1Request request = new Update1Request();
+            request.personId =  operation.personId();
+            request.personFirstName = operation.personFirstName();
+            request.personLastName = operation.personLastName();
+            request.gender = operation.gender();
+            request.birthday = operation.birthday().getTime();
+            request.creationDate = operation.creationDate().getTime();
+            request.locationIp = operation.locationIp();
+            request.browserUsed = operation.browserUsed();
+            request.cityId = operation.cityId();
+            request.languages = operation.languages();
+            request.emails = operation.emails();
+            request.tagIds = operation.tagIds();
+            request.studyAt_id = new ArrayList<>();
+            request.studyAt_year = new ArrayList<>();
+            for (LdbcUpdate1AddPerson.Organization org : operation.studyAt()) {
+                request.studyAt_id.add(org.organizationId());
+                request.studyAt_year.add(org.year());
+            }
+            request.workAt_id = new ArrayList<>();
+            request.workAt_year = new ArrayList<>();
+            for (LdbcUpdate1AddPerson.Organization org : operation.workAt()) {
+                request.workAt_id.add(org.organizationId());
+                request.workAt_year.add(org.year());
+            }
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                client.update1(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }

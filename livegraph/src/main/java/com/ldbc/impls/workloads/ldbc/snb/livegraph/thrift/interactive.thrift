@@ -218,6 +218,25 @@ struct ShortQuery1Response {
     8: i64 creationDate,
 }
 
+struct Update1Request {
+    1: i64 personId,
+    2: string personFirstName,
+    3: string personLastName,
+    4: string gender,
+    5: i64 birthday,
+    6: i64 creationDate,
+    7: string locationIp,
+    8: string browserUsed,
+    9: i64 cityId,
+    10: list<string> languages,
+    11: list<string> emails,
+    12: list<i64> tagIds,
+    13: list<i64> studyAt_id,
+    14: list<i32> studyAt_year,
+    15: list<i64> workAt_id,
+    16: list<i32> workAt_year,
+}
+
 service Interactive {
     list<Query1Response> query1(1:Query1Request request),
     list<Query2Response> query2(1:Query2Request request),
@@ -234,4 +253,5 @@ service Interactive {
     Query13Response query13(1:Query13Request request),
     list<Query14Response> query14(1:Query14Request request),
     ShortQuery1Response shortQuery1(1:ShortQuery1Request request),
+    void update1(1:Update1Request request),
 }
