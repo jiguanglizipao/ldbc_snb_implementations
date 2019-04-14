@@ -237,6 +237,38 @@ struct Update1Request {
     16: list<i32> workAt_year,
 }
 
+struct Update2Request {
+    1: i64 personId,
+    2: i64 postId,
+    3: i64 creationDate,
+}
+
+struct Update3Request {
+    1: i64 personId,
+    2: i64 commentId,
+    3: i64 creationDate,
+}
+
+struct Update4Request {
+    1: i64 forumId,
+    2: string forumTitle,
+    3: i64 creationDate,
+    4: i64 moderatorPersonId,
+    5: list<i64> tagIds,
+}
+
+struct Update5Request {
+    1: i64 personId,
+    2: i64 forumId,
+    3: i64 joinDate,
+}
+
+struct Update8Request {
+    1: i64 person1Id,
+    2: i64 person2Id,
+    3: i64 creationDate,
+}
+
 service Interactive {
     list<Query1Response> query1(1:Query1Request request),
     list<Query2Response> query2(1:Query2Request request),
@@ -254,4 +286,9 @@ service Interactive {
     list<Query14Response> query14(1:Query14Request request),
     ShortQuery1Response shortQuery1(1:ShortQuery1Request request),
     void update1(1:Update1Request request),
+    void update2(1:Update2Request request),
+    void update3(1:Update3Request request),
+    void update4(1:Update4Request request),
+    void update5(1:Update5Request request),
+    void update8(1:Update8Request request),
 }

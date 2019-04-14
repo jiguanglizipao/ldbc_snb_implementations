@@ -663,6 +663,19 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcUpdate2AddPostLike operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
+            Update2Request request = new Update2Request();
+            request.personId = operation.personId();
+            request.postId = operation.postId();
+            request.creationDate = operation.creationDate().getTime();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                client.update2(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -672,6 +685,19 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcUpdate3AddCommentLike operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
+            Update3Request request = new Update3Request();
+            request.personId = operation.personId();
+            request.commentId = operation.commentId();
+            request.creationDate = operation.creationDate().getTime();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                client.update3(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -681,6 +707,21 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcUpdate4AddForum operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
+            Update4Request request = new Update4Request();
+            request.forumId =  operation.forumId();
+            request.forumTitle = operation.forumTitle();
+            request.creationDate = operation.creationDate().getTime();
+            request.moderatorPersonId = operation.moderatorPersonId();
+            request.tagIds = operation.tagIds();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                client.update4(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -690,6 +731,19 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcUpdate5AddForumMembership operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
+            Update5Request request = new Update5Request();
+            request.personId = operation.personId();
+            request.forumId =  operation.forumId();
+            request.joinDate = operation.joinDate().getTime();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                client.update5(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -716,6 +770,19 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcUpdate8AddFriendship operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
+            Update8Request request = new Update8Request();
+            request.person1Id = operation.person1Id();
+            request.person2Id = operation.person2Id();
+            request.creationDate = operation.creationDate().getTime();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                client.update8(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
