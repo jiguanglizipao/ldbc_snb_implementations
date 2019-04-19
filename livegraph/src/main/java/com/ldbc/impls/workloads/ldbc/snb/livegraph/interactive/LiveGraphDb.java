@@ -3,7 +3,6 @@ package com.ldbc.impls.workloads.ldbc.snb.livegraph.interactive;
 import com.ldbc.driver.*;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.db.DummyLdbcSnbInteractiveOperationResultSets;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TTransport;
@@ -14,18 +13,6 @@ import java.util.Map;
 
 public class LiveGraphDb extends Db {
 
-    private static final List<LdbcShortQuery2PersonPostsResult> LDBC_SHORT_QUERY_2_RESULTS =
-            DummyLdbcSnbInteractiveOperationResultSets.short2Results();
-    private static final List<LdbcShortQuery3PersonFriendsResult> LDBC_SHORT_QUERY_3_RESULTS =
-            DummyLdbcSnbInteractiveOperationResultSets.short3Results();
-    private static final LdbcShortQuery4MessageContentResult LDBC_SHORT_QUERY_4_RESULTS =
-            DummyLdbcSnbInteractiveOperationResultSets.short4Results();
-    private static final LdbcShortQuery5MessageCreatorResult LDBC_SHORT_QUERY_5_RESULTS =
-            DummyLdbcSnbInteractiveOperationResultSets.short5Results();
-    private static final LdbcShortQuery6MessageForumResult LDBC_SHORT_QUERY_6_RESULTS =
-            DummyLdbcSnbInteractiveOperationResultSets.short6Results();
-    private static final List<LdbcShortQuery7MessageRepliesResult> LDBC_SHORT_QUERY_7_RESULTS =
-            DummyLdbcSnbInteractiveOperationResultSets.short7Results();
     protected LiveGraphDbConnectionState dcs;
 
     @Override
@@ -562,7 +549,31 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcShortQuery2PersonPosts operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
-            resultReporter.report(0, LDBC_SHORT_QUERY_2_RESULTS, operation);
+            ShortQuery2Request request = new ShortQuery2Request();
+            request.personId = operation.personId();
+            request.limit = operation.limit();
+            List<ShortQuery2Response> response = new ArrayList<>();
+            ArrayList<LdbcShortQuery2PersonPostsResult> result = new ArrayList<>();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.shortQuery2(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            for (ShortQuery2Response resp : response) {
+                LdbcShortQuery2PersonPostsResult res = new LdbcShortQuery2PersonPostsResult(resp.messageId,
+                        resp.messageContent,
+                        resp.messageCreationDate,
+                        resp.originalPostId,
+                        resp.originalPostAuthorId,
+                        resp.originalPostAuthorFirstName,
+                        resp.originalPostAuthorLastName);
+                result.add(res);
+            }
+            resultReporter.report(0, result, operation);
         }
     }
 
@@ -571,7 +582,27 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcShortQuery3PersonFriends operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
-            resultReporter.report(0, LDBC_SHORT_QUERY_3_RESULTS, operation);
+            ShortQuery3Request request = new ShortQuery3Request();
+            request.personId = operation.personId();
+            List<ShortQuery3Response> response = new ArrayList<>();
+            ArrayList<LdbcShortQuery3PersonFriendsResult> result = new ArrayList<>();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.shortQuery3(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            for (ShortQuery3Response resp : response) {
+                LdbcShortQuery3PersonFriendsResult res = new LdbcShortQuery3PersonFriendsResult(resp.personId,
+                        resp.firstName,
+                        resp.lastName,
+                        resp.friendshipCreationDate);
+                result.add(res);
+            }
+            resultReporter.report(0, result, operation);
         }
     }
 
@@ -580,7 +611,21 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcShortQuery4MessageContent operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
-            resultReporter.report(0, LDBC_SHORT_QUERY_4_RESULTS, operation);
+            ShortQuery4Request request = new ShortQuery4Request();
+            request.messageId = operation.messageId();
+            ShortQuery4Response response = new ShortQuery4Response();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.shortQuery4(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            LdbcShortQuery4MessageContentResult result = new LdbcShortQuery4MessageContentResult(response.messageContent,
+                    response.messageCreationDate);
+            resultReporter.report(0, result, operation);
         }
     }
 
@@ -589,7 +634,22 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcShortQuery5MessageCreator operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
-            resultReporter.report(0, LDBC_SHORT_QUERY_5_RESULTS, operation);
+            ShortQuery5Request request = new ShortQuery5Request();
+            request.messageId = operation.messageId();
+            ShortQuery5Response response = new ShortQuery5Response();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.shortQuery5(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            LdbcShortQuery5MessageCreatorResult result = new LdbcShortQuery5MessageCreatorResult(response.personId,
+                    response.firstName,
+                    response.lastName);
+            resultReporter.report(0, result, operation);
         }
     }
 
@@ -598,7 +658,24 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcShortQuery6MessageForum operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
-            resultReporter.report(0, LDBC_SHORT_QUERY_6_RESULTS, operation);
+            ShortQuery6Request request = new ShortQuery6Request();
+            request.messageId = operation.messageId();
+            ShortQuery6Response response = new ShortQuery6Response();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.shortQuery6(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            LdbcShortQuery6MessageForumResult result = new LdbcShortQuery6MessageForumResult(response.forumId,
+                    response.forumTitle,
+                    response.moderatorId,
+                    response.moderatorFirstName,
+                    response.moderatorLastName);
+            resultReporter.report(0, result, operation);
         }
     }
 
@@ -607,7 +684,30 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcShortQuery7MessageReplies operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
-            resultReporter.report(0, LDBC_SHORT_QUERY_7_RESULTS, operation);
+            ShortQuery7Request request = new ShortQuery7Request();
+            request.messageId = operation.messageId();
+            List<ShortQuery7Response> response = new ArrayList<>();
+            ArrayList<LdbcShortQuery7MessageRepliesResult> result = new ArrayList<>();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                response = client.shortQuery7(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            for (ShortQuery7Response resp : response) {
+                LdbcShortQuery7MessageRepliesResult res = new LdbcShortQuery7MessageRepliesResult(resp.commentId,
+                        resp.commentContent,
+                        resp.commentCreationDate,
+                        resp.replyAuthorId,
+                        resp.replyAuthorFirstName,
+                        resp.replyAuthorLastName,
+                        resp.replyAuthorKnowsOriginalMassageAuthor);
+                result.add(res);
+            }
+            resultReporter.report(0, result, operation);
         }
     }
 
@@ -752,6 +852,28 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcUpdate6AddPost operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
+            Update6Request request = new Update6Request();
+            request.postId = operation.postId();
+            request.imageFile = operation.imageFile();
+            request.creationDate = operation.creationDate().getTime();
+            request.locationIp = operation.locationIp();
+            request.browserUsed = operation.browserUsed();
+            request.language = operation.language();
+            request.content = operation.content();
+            request.length = operation.length();
+            request.authorPersonId = operation.authorPersonId();
+            request.forumId =  operation.forumId();
+            request.countryId =  operation.countryId();
+            request.tagIds = operation.tagIds();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                client.update6(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -761,6 +883,27 @@ public class LiveGraphDb extends Db {
         @Override
         public void executeOperation(LdbcUpdate7AddComment operation, LiveGraphDbConnectionState dbConnectionState,
                                      ResultReporter resultReporter) throws DbException {
+            Update7Request request = new Update7Request();
+            request.commentId = operation.commentId();
+            request.creationDate = operation.creationDate().getTime();
+            request.locationIp = operation.locationIp();
+            request.browserUsed = operation.browserUsed();
+            request.content = operation.content();
+            request.length = operation.length();
+            request.authorPersonId = operation.authorPersonId();
+            request.countryId =  operation.countryId();
+            request.replyToPostId = operation.replyToPostId();
+            request.replyToCommentId = operation.replyToCommentId();
+            request.tagIds = operation.tagIds();
+            try {
+                TTransport transport = dbConnectionState.getConnection();
+                TBinaryProtocol protocol = new TBinaryProtocol(transport);
+                Interactive.Client client = new Interactive.Client(protocol);
+                client.update7(request);
+                dbConnectionState.returnConnection(transport);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }

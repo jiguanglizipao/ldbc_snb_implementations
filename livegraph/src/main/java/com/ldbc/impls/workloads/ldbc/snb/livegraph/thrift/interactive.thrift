@@ -218,6 +218,77 @@ struct ShortQuery1Response {
     8: i64 creationDate,
 }
 
+struct ShortQuery2Request {
+    1: i64 personId,
+    2: i32 limit,
+}
+
+struct ShortQuery2Response {
+    1: i64 messageId,
+    2: string messageContent,
+    3: i64 messageCreationDate,
+    4: i64 originalPostId,
+    5: i64 originalPostAuthorId,
+    6: string originalPostAuthorFirstName,
+    7: string originalPostAuthorLastName,
+}
+
+struct ShortQuery3Request {
+    1: i64 personId,
+}
+
+struct ShortQuery3Response {
+    1: i64 personId,
+    2: string firstName,
+    3: string lastName,
+    4: i64 friendshipCreationDate,
+}
+
+struct ShortQuery4Request {
+    1: i64 messageId,
+}
+
+struct ShortQuery4Response {
+    1: i64 messageCreationDate,
+    2: string messageContent,
+}
+
+struct ShortQuery5Request {
+    1: i64 messageId,
+}
+
+struct ShortQuery5Response {
+    1: i64 personId,
+    2: string firstName,
+    3: string lastName,
+}
+
+struct ShortQuery6Request {
+    1: i64 messageId,
+}
+
+struct ShortQuery6Response {
+    1: i64 forumId,
+    2: string forumTitle,
+    3: i64 moderatorId,
+    4: string moderatorFirstName,
+    5: string moderatorLastName,
+}
+
+struct ShortQuery7Request {
+    1: i64 messageId,
+}
+
+struct ShortQuery7Response {
+    1: i64 commentId,
+    2: string commentContent,
+    3: i64 commentCreationDate,
+    4: i64 replyAuthorId,
+    5: string replyAuthorFirstName,
+    6: string replyAuthorLastName,
+    7: bool replyAuthorKnowsOriginalMassageAuthor,
+}
+
 struct Update1Request {
     1: i64 personId,
     2: string personFirstName,
@@ -263,6 +334,35 @@ struct Update5Request {
     3: i64 joinDate,
 }
 
+struct Update6Request {
+    1: i64 postId,
+    2: string imageFile,
+    3: i64 creationDate,
+    4: string locationIp,
+    5: string browserUsed,
+    6: string language,
+    7: string content,
+    8: i32 length,
+    9: i64 authorPersonId,
+    10: i64 forumId,
+    11: i64 countryId,
+    12: list<i64> tagIds,
+}
+
+struct Update7Request {
+    1: i64 commentId,
+    2: i64 creationDate,
+    3: string locationIp,
+    4: string browserUsed,
+    5: string content,
+    6: i32 length,
+    7: i64 authorPersonId,
+    8: i64 countryId,
+    9: i64 replyToPostId,
+    10: i64 replyToCommentId,
+    11: list<i64> tagIds,
+}
+
 struct Update8Request {
     1: i64 person1Id,
     2: i64 person2Id,
@@ -285,10 +385,18 @@ service Interactive {
     Query13Response query13(1:Query13Request request),
     list<Query14Response> query14(1:Query14Request request),
     ShortQuery1Response shortQuery1(1:ShortQuery1Request request),
+    list<ShortQuery2Response> shortQuery2(1:ShortQuery2Request request),
+    list<ShortQuery3Response> shortQuery3(1:ShortQuery3Request request),
+    ShortQuery4Response shortQuery4(1:ShortQuery4Request request),
+    ShortQuery5Response shortQuery5(1:ShortQuery5Request request),
+    ShortQuery6Response shortQuery6(1:ShortQuery6Request request),
+    list<ShortQuery7Response> shortQuery7(1:ShortQuery7Request request),
     void update1(1:Update1Request request),
     void update2(1:Update2Request request),
     void update3(1:Update3Request request),
     void update4(1:Update4Request request),
     void update5(1:Update5Request request),
+    void update6(1:Update6Request request),
+    void update7(1:Update7Request request),
     void update8(1:Update8Request request),
 }

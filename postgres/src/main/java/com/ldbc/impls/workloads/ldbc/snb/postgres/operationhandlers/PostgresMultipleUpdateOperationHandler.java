@@ -27,7 +27,8 @@ public abstract class PostgresMultipleUpdateOperationHandler<TOperation extends 
                 stmt.close();
             }
         } catch (Exception e) {
-            throw new DbException(e);
+            System.out.println(e); 
+//            throw new DbException(e);
         }
         resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         state.returnConnection(conn);

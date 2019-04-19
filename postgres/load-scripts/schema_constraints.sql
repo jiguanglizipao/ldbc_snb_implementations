@@ -16,6 +16,17 @@ ALTER TABLE message_tag ADD PRIMARY KEY (mt_messageid, mt_tagid);
 ALTER TABLE tagclass ADD PRIMARY KEY (tc_tagclassid);
 ALTER TABLE tag ADD PRIMARY KEY (t_tagid);
 
+ALTER TABLE message ADD FOREIGN KEY (m_creatorid) REFERENCES person(p_personid);
+ALTER TABLE message ADD FOREIGN KEY (m_ps_forumid) REFERENCES forum(f_forumid);
+ALTER TABLE message ADD FOREIGN KEY (m_c_replyof) REFERENCES message(m_messageid);
+ALTER TABLE forum ADD FOREIGN KEY (f_moderatorid) REFERENCES person(p_personid);
+ALTER TABLE forum_person ADD FOREIGN KEY (fp_forumid) REFERENCES forum(f_forumid);
+ALTER TABLE forum_person ADD FOREIGN KEY (fp_personid) REFERENCES person(p_personid);
+ALTER TABLE knows ADD FOREIGN KEY (k_person1id) REFERENCES person(p_personid);
+ALTER TABLE knows ADD FOREIGN KEY (k_person2id) REFERENCES person(p_personid);
+ALTER TABLE likes ADD FOREIGN KEY (l_messageid) REFERENCES message(m_messageid);
+ALTER TABLE likes ADD FOREIGN KEY (l_personid) REFERENCES person(p_personid);
+
 vacuum analyze;
 -- Additional indexes (currently defined w/ Virtuoso syntax)
 -- create index p_placeid on person (p_placeid) partition (p_placeid int);

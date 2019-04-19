@@ -22,7 +22,8 @@ public abstract class PostgresUpdateOperationHandler<TOperation extends Operatio
             state.logQuery(operation.getClass().getSimpleName(), queryString);
             stmt.execute(queryString);
         } catch (Exception e) {
-            throw new DbException(e);
+            System.out.println(e); 
+//            throw new dbexception(e);
         }
         resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         state.returnConnection(conn);
